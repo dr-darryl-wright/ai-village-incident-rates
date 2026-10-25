@@ -1,0 +1,12 @@
+# Never commit: API key, the gated dataset, and session/turn-level derived files
+.anthropic_key
+.env
+data/
+outputs/
+pilot/run/
+cltr-reanalysis/series.json
+
+# Python and OS clutter
+__pycache__/
+*.pyc
+.DS_Store
