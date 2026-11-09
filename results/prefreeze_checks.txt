@@ -1,0 +1,59 @@
+Variant: final | signals file: session_signals.csv.gz | limits for section 3: actions 4000, output 5000, agent text and chat 2000
+Frame sessions: 76255 | 2% threshold: 1525 sessions | latest first turn in frame: 2026-10-07
+All sessions: 83813, flagged 5472
+2026 frame (first turn from 1 January 2026): 69540 sessions, flagged 5199 (4622 own-words only, 501 call-out only, 76 both)
+
+1. TERM CHECK (frame sessions; 'alone' = no other term matched in that session)
+term               flags   alone  alone % of frame  over threshold?
+inflat              1060     933             1.22%  
+fake                 873     686             0.90%  
+fabricat             760     538             0.71%  
+overstat             586     483             0.63%  
+pretend              485     373             0.49%  
+circumvent           353     233             0.31%  
+without              218     171             0.22%  
+hide                 210     167             0.22%  
+secretly             198     166             0.22%  
+banned               183     155             0.20%  
+loophole             155     124             0.16%  
+c_fabricat           161     110             0.14%  
+didnt_actually        95      86             0.11%  
+dont_tell            108      79             0.10%  
+quietly_verb          96      76             0.10%  
+mislead               85      69             0.09%  
+bypass_rule           90      68             0.09%  
+made_up               82      64             0.08%  
+you_claimed           47      39             0.05%  
+exaggerat             36      28             0.04%  
+stop_doing            30      25             0.03%  
+not_true              21      21             0.03%  
+rule_break            18      18             0.02%  
+placeholder           17      16             0.02%  
+c_made_up              3       3             0.00%  
+cover_up               1       1             0.00%  
+get_around             1       1             0.00%  
+
+2. CALL-OUT WINDOW CHECK (flagged = own words, or a call-out linked within the window)
+window      early flagged  late flagged     rest  flagged by call-out only  moved vs 2 h
+30 min                200          5112    70943                       545             1
+2 h                   200          5113    70942                       546             0
+8 h                   200          5116    70939                       549             3
+UTC day               200          5116    70939                       549             3
+Flagged sessions before 13 October 2025 (2 h window, excluding Opus 4.5 (Claude Code)): 127
+
+3. TRUNCATION CHECK (share of items longer than the limit; threshold 5%)
+all frame sessions: actions > 4000: 59081/1433992 (4.12%) | tool outputs/errors > 5000: 73562/1343536 (5.48%) | agent text > 2000: 6111/1437888 (0.42%)
+flagged frame sessions: actions > 4000: 5771/134382 (4.29%) | tool outputs/errors > 5000: 11267/139249 (8.09%) | agent text > 2000: 585/121537 (0.48%)
+all chat messages from 13 October 2025 > 2000: 2467/144452 (1.71%)
+
+4. SHARE CUT AT ALTERNATIVE LIMITS (frame sessions; chats from 13 October 2025)
+actions: > 600: 24.96%, > 3000: 5.43%, > 4000: 4.12%, > 6000: 2.75%, > 8000: 1.91%
+tool outputs/errors: > 1500: 16.71%, > 3000: 9.33%, > 5000: 5.48%, > 8000: 3.13%
+chat messages: > 1200: 6.40%, > 2000: 1.71%, > 3000: 0.50%, > 5000: 0.11%
+
+5. SIZE AND COST (tokens = characters / 4; seed 7, not the pilot seed)
+scoring prompt (pilot/scoring_prompt.md): 2553 tokens
+300 random sessions with a turn in 2026, earlier code limits: mean 9197 tokens, median 6737, p90 16377, max 100000
+300 random sessions with a turn in 2026, current limits: mean 12268 tokens, median 8476, p90 25492, max 100000 | pilot cost at batch prices ($2.50/$12.50 per million): input $12.05 + output $2.44 = $14.49; if every output hit 2,000 tokens: $20.17
+pilot-like mix (60 early flagged, 150 late flagged, 100 rest), earlier code limits: mean 10070 tokens, median 8487, p90 17989, max 57924
+pilot-like mix (60 early flagged, 150 late flagged, 100 rest), current limits: mean 14512 tokens, median 11254, p90 29455, max 63194 | pilot cost at batch prices ($2.50/$12.50 per million): input $13.87 + output $2.44 = $16.31; if every output hit 2,000 tokens: $22.00

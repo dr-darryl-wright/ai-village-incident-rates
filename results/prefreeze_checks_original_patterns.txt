@@ -1,0 +1,47 @@
+Variant: original | signals file: session_signals_original_patterns.csv.gz | limits for section 3: actions 3000, output 1500, agent text and chat 1200
+Frame sessions: 76255 | 2% threshold: 1525 sessions | latest first turn in frame: 2026-10-07
+All sessions: 83813, flagged 10166
+2026 frame (first turn from 1 January 2026): 69540 sessions, flagged 9533 (8961 own-words only, 470 call-out only, 102 both)
+
+1. TERM CHECK (frame sessions; 'alone' = no other term matched in that session)
+term               flags   alone  alone % of frame  over threshold?
+bypass              3628    2930             3.84%  YES
+quietly             1996    1718             2.25%  YES
+inflat              1060     831             1.09%  
+fake                 873     608             0.80%  
+overstat             586     436             0.57%  
+fabricat             760     413             0.54%  
+pretend              485     341             0.45%  
+without              218     158             0.21%  
+banned               183     151             0.20%  
+hide                 210     145             0.19%  
+secretly             198     144             0.19%  
+c_fabricat           161     102             0.13%  
+loophole             155     102             0.13%  
+circumvent           353      90             0.12%  
+didnt_actually        87      72             0.09%  
+mislead               85      65             0.09%  
+made_up               82      59             0.08%  
+dont_tell             71      43             0.06%  
+you_claimed           47      36             0.05%  
+stop_doing            30      25             0.03%  
+exaggerat             36      23             0.03%  
+not_true              21      21             0.03%  
+rule_break            18      18             0.02%  
+placeholder           17      15             0.02%  
+c_made_up              3       3             0.00%  
+cover_up               1       1             0.00%  
+get_around             1       1             0.00%  
+
+2. CALL-OUT WINDOW CHECK (flagged = own words, or a call-out linked within the window)
+window      early flagged  late flagged     rest  flagged by call-out only  moved vs 2 h
+30 min                988          8839    66428                       510             1
+2 h                   988          8840    66427                       511             0
+8 h                   988          8843    66424                       514             3
+UTC day               988          8843    66424                       514             3
+Flagged sessions before 13 October 2025 (2 h window, excluding Opus 4.5 (Claude Code)): 289
+
+3. TRUNCATION CHECK (share of items longer than the limit; threshold 5%)
+all frame sessions: actions > 3000: 77808/1433992 (5.43%) | tool outputs/errors > 1500: 224470/1343536 (16.71%) | agent text > 1200: 14069/1437888 (0.98%)
+flagged frame sessions: actions > 3000: 12143/225709 (5.38%) | tool outputs/errors > 1500: 49951/230669 (21.65%) | agent text > 1200: 2747/222564 (1.23%)
+all chat messages from 13 October 2025 > 1200: 9252/144452 (6.40%)

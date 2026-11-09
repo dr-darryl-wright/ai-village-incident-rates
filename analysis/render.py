@@ -1,11 +1,18 @@
 """Render one computer-use session as plain text for the scorer.
 Included: the village goal in force, the agent's individual goal (if any), each turn's action
-(type + text/command), the agent's own non-reasoning text, tool output and errors (each truncated
-to OUTPUT_CAP characters), and chat messages in the session window (all speakers, so instructions
-from admins or other agents are visible). Excluded: reasoning/thinking text (see coding rule 4),
+(type + text/command), the agent's own non-reasoning text, tool output and errors (over OUTPUT_CAP characters: first
+OUTPUT_HEAD and last OUTPUT_TAIL kept), and chat messages in the session window (all speakers, so instructions
+from admins or other agents are visible). Excluded: reasoning/thinking text (protocol section 3),
 screenshots, click coordinates."""
 import orjson
-OUTPUT_CAP = 1500
+ACTION_CAP = 4000          # action text/command (protocol section 5)
+OUTPUT_CAP = 5000          # tool output / error per item
+OUTPUT_HEAD, OUTPUT_TAIL = 3500, 1500  # longer output keeps first 3,500 and last 1,500 characters
+TEXT_CAP = 2000            # agent's visible text per turn, and each chat message
+def cut_output(x):
+    x = str(x)
+    if len(x) <= OUTPUT_CAP: return x
+    return x[:OUTPUT_HEAD] + f" [...{len(x) - OUTPUT_HEAD - OUTPUT_TAIL} characters cut...] " + x[-OUTPUT_TAIL:]
 def visible_text(o, out):
     """Collect model-visible output text, skipping reasoning blocks."""
     if isinstance(o, dict):
@@ -19,11 +26,11 @@ def visible_text(o, out):
             if isinstance(v, (dict, list)): visible_text(v, out)
     elif isinstance(o, list):
         for v in o: visible_text(v, out)
-def action_str(a):
+def action_str(a, cap=ACTION_CAP):
     if not isinstance(a, dict): return "(no action)"
     kind = a.get("action") or ("bash" if "command" in a else "other")
     detail = a.get("command") or a.get("text") or a.get("url") or ""
-    return f"{kind}: {str(detail)[:600]}" if detail else kind
+    return f"{kind}: {str(detail)[:cap]}" if detail else kind
 def render(session, turns, chats, village_goal, agent_goal, agent_name, names):
     L = [f"AGENT: {agent_name}", f"VILLAGE GOAL: {village_goal}"]
     if agent_goal: L.append(f"AGENT'S INDIVIDUAL GOAL: {agent_goal}")
@@ -33,11 +40,11 @@ def render(session, turns, chats, village_goal, agent_goal, agent_name, names):
         hhmm = ts[11:19]
         if kind == "C":
             who = names.get(x.get("agent_speaker_id"), "HUMAN") if x["speaker_type"] == "agent" else "HUMAN (viewer/admin)"
-            L.append(f"[{hhmm}] CHAT {who}: {x['content'][:1200]}")
+            L.append(f"[{hhmm}] CHAT {who}: {x['content'][:TEXT_CAP]}")
         else:
             out = []; visible_text(x.get("agent_messages"), out); said = " ".join(s.strip() for s in out if s.strip())
-            if said: L.append(f"[{hhmm}] AGENT SAYS: {said[:1200]}")
+            if said: L.append(f"[{hhmm}] AGENT SAYS: {said[:TEXT_CAP]}")
             L.append(f"[{hhmm}] ACTION {action_str(x.get('agent_action'))}")
             for k in ("output", "error"):
-                if x.get(k): L.append(f"[{hhmm}]   {k.upper()}: {str(x[k])[:OUTPUT_CAP]}")
+                if x.get(k): L.append(f"[{hhmm}]   {k.upper()}: {cut_output(x[k])}")
     return "\n".join(L)
